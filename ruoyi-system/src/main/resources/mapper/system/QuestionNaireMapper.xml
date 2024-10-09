@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.QuestionnaierMapper">
+
+    <resultMap type="Questionnaier" id="QuestionnaierResult">
+        <result property="id"    column="id"    />
+        <result property="question"    column="question"    />
+        <result property="answer"    column="answer"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectQuestionnaierVo">
+        select id, question, answer, create_time, remark from questionnaier
+    </sql>
+
+    <select id="selectQuestionnaierList" parameterType="Questionnaier" resultMap="QuestionnaierResult">
+        <include refid="selectQuestionnaierVo"/>
+        <where>
+            <if test="question != null  and question != ''"> and question = #{question}</if>
+            <if test="answer != null  and answer != ''"> and answer = #{answer}</if>
+        </where>
+    </select>
+
+    <select id="selectQuestionnaierById" parameterType="Long" resultMap="QuestionnaierResult">
+        <include refid="selectQuestionnaierVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertQuestionnaier" parameterType="Questionnaier" useGeneratedKeys="true" keyProperty="id">
+        insert into questionnaier
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="question != null">question,</if>
+            <if test="answer != null">answer,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="question != null">#{question},</if>
+            <if test="answer != null">#{answer},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updateQuestionnaier" parameterType="Questionnaier">
+        update questionnaier
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="question != null">question = #{question},</if>
+            <if test="answer != null">answer = #{answer},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteQuestionnaierById" parameterType="Long">
+        delete from questionnaier where id = #{id}
+    </delete>
+
+    <delete id="deleteQuestionnaierByIds" parameterType="String">
+        delete from questionnaier where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
